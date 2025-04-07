@@ -25,7 +25,10 @@ class Date{
     Date operator+ (const Date& d ,int nbJour);
     Date operator+= (Date& d ,int nbJour);
     Date operator++ (Date& d);
-
+    //doit renvoyer True si d1 est avant d2
+    bool operator< (const Date& d1, const Date& d2);
+    //doit renvoyer True si d1 est égal à d2
+    bool operator== (const Date& d1, const Date& d2);
 };
 
 // opérateur affichage 

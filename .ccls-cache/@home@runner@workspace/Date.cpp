@@ -98,6 +98,31 @@ Date Date::operator++(Date &d) {
   }
 }
 
+bool Date::operator<(const Date &d1, const Date &d2) {
+  if (d1.getAnnee() < d2.getAnnee()) {
+    return true;
+  } else {
+    if (d1.getMois() < d2.getMois()) {
+      return true;
+    } else {
+      if (d1.getJour() < d2.getJour()) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+}
+
+bool Date::operator==(const Date &d1, const Date &d2) {
+  if (d1.getAnnee() == d2.getAnnee() && d1.getMois() == d2.getMois() &&
+      d1.getJour() == d2.getJour()) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 // opérateur d'affichage
 
 std::ostream &operator<<(std::ostream &os, const Date &d) {
