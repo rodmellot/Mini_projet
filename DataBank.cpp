@@ -5,9 +5,11 @@
 #include <stdexcept>
 
 // Constructeur
-Databank::Databank(const std::string &stationsFile, const std::string &dataFile)
-    : dataIndex() { // Initialize dataIndex here
-  dataIndex = {};
+Databank::Databank(const std::string &stationsFile,
+                   const std::string &dataFile) {
+  dataIndex = std::unordered_map<
+      Station,
+      std::unordered_map<Date, std::tuple<float, float, float, float>>>();
   loadStations(stationsFile);
   loadData(dataFile);
 }
