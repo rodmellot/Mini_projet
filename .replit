@@ -1,14 +1,16 @@
 modules = ["cpp-clang14"]
-<<<<<<< HEAD
-
-[nix]
-channel = "stable-24_05"
-=======
-run = "clang++ -std=c++17 -o main main.cpp && ./main"
-
-[nix]
-channel = "stable-24_05"
 
 [deployment]
-run = ["sh", "-c", "clang++ -std=c++17 -o main main.cpp && ./main"]
->>>>>>> 8c5e1c93b0169e33c0473ee4f48c94b471385219
+run = "clang++ -std=c++17 -o main main.cpp && ./main"
+
+[workflows]
+runButton = "Run"
+
+[[workflows.workflow]]
+name = "Run"
+author = 40023705
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "clang++ -std=c++17 *.cpp -o main && ./main"
