@@ -48,6 +48,13 @@ void Date::setJour(int jour) {
   }
 }
 
+//opérations
+
+Date Date::operator+(int nbjour) const{
+    
+
+}
+
 // opérateur d'affichage
 
 std::ostream &operator<<(std::ostream &os, const Date &d) {

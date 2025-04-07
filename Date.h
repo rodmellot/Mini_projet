@@ -20,6 +20,10 @@ class Date{
     void setAnnee(int annee);
     void setMois(int mois);
     void setJour(int jour);
+
+    //opération
+    Date operator+ (int nbJour) const;
+
 };
 
 // opérateur affichage 
