@@ -8,8 +8,12 @@
 #include "Station.h"
 #include "Date.h"
 
+
+// La structure de recherche sera définie comme suit : Une unordered_map dont la clé est la Station et la valeur est une autre unordered_map, dont la clé est la Date et la valeur est le tuple Relevé <float, float, float, float> (Pluviométrie, Température Minimale, Température Maximale, Température Moyenne).(Q7)
+
 class Databank {
 public:
+    // Alias pour les itérateurs sur les stations (Q8)
     using StationIterator = std::vector<Station>::iterator;
 
     // Structure pour stocker les données
@@ -19,18 +23,18 @@ public:
         float precipitation;
         std::tuple<float, float, float, float> releve;  // Température Minimale, Température Maximale, Température Moyenne, Pluviométrie
     };
+    // Constructeur (Q11)
+    Databank(const std::string& stationsFile, const std::string& dataFile) ;
 
-    Databank(const std::string& stationsFile, const std::string& dataFile);
-
-    // Accès aux itérateurs pour les stations
+    // Remplace les accesseurs pour les stations (Q9)
     StationIterator begin();
     StationIterator end();
 
-    // Récupérer les relevés (températures et précipitations) pour une station à une date
+    // Récupérer les relevés (températures et précipitations) pour une station à une date (Q12)
     std::tuple<float, float, float, float> getReleve(const Station& station, const Date& date) const;
 
 private:
-    // Méthodes privées pour charger les données
+    // Méthodes privées pour charger les données (Q10)
     void loadStations(const std::string& stationsFile);
     void loadData(const std::string& dataFile);
 
