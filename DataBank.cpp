@@ -1,7 +1,9 @@
 #include "DataBank.h"
+#include <cmath>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <unordered_map>
 
 // Constructeur
 Databank::Databank(const std::string &stationsFile,
@@ -15,17 +17,19 @@ Databank::StationIterator Databank::begin() { return stations.begin(); }
 
 Databank::StationIterator Databank::end() { return stations.end(); }
 
-// Méthode pour récupérer la pluviométrie d'une station à une date donnée
-double Databank::getPrecipitation(const Station &station,
-                                  const Date &date) const {
-  // Recherche de la donnée pour la station et la date
-  for (const auto &d : data) {
-    if (d.station == station && d.date == date) {
-      return d.precipitation;
+// Méthode pour récupérer les relevés d'une station à une date donnée
+std::tuple<float, float, float, float>
+Databank::getReleve(const Station &station, const Date &date) const {
+  // Recherche rapide via l'indexation des données par station et date
+  auto stationIt = dataIndex.find(station);
+  if (stationIt != dataIndex.end()) {
+    auto dateIt = stationIt->second.find(date);
+    if (dateIt != stationIt->second.end()) {
+      return dateIt->second; // Retourne le tuple de relevés trouvé
     }
   }
-  // Retourner NAN si aucune donnée valide n'est trouvée
-  return NAN;
+  // Retourner un tuple de NaN si aucune donnée valide n'est trouvée
+  return std::make_tuple(NAN, NAN, NAN, NAN);
 }
 
 // Méthode privée pour charger les stations depuis un fichier
@@ -38,8 +42,7 @@ void Databank::loadStations(const std::string &stationsFile) {
   std::string line;
   while (std::getline(file, line)) {
     std::istringstream stream(line);
-    Station station;
-    station.loadFromStream(stream);
+    Station station(line); // Constructeur qui prend une ligne CSV
     stations.push_back(station);
   }
 
@@ -57,8 +60,53 @@ void Databank::loadData(const std::string &dataFile) {
   while (std::getline(file, line)) {
     std::istringstream stream(line);
     Data dataEntry;
-    dataEntry.station.loadFromStream(stream); // Lecture de la station
-    dataEntry.date = Date(line);              // Lecture de la date
-    stream >> dataEntry.precipitation;        // Lecture de la pluviométrie
 
-  // Filtrage des données pour ne
+    // Lecture de la station et séparation par ;
+    std::string stationData;
+    std::getline(stream, stationData, ';'); // Station est la première colonne
+    Station station(stationData);
+
+    // Lecture de la date (format AAAAMMJJ)
+    int annee, mois, jour;
+    std::string dateStr;
+    std::getline(stream, dateStr,
+                 ';'); // Récupération de la date en format string
+    annee = std::stoi(dateStr.substr(0, 4)); // Extraction de l'année
+    mois = std::stoi(dateStr.substr(4, 2));  // Extraction du mois
+    jour = std::stoi(dateStr.substr(6, 2));  // Extraction du jour
+
+    Date date(annee, mois, jour);
+
+    // Filtrage du 1er octobre 2024 au 28 février 2025
+    if ((annee > 2024 || (annee == 2024 && mois >= 10)) &&
+        (annee < 2025 || (annee == 2025 && mois <= 2))) {
+
+      // Lecture des autres données : précipitation, température min, temp max,
+      // temp moy
+      float precipitation, tempMin, tempMax, tempMoy;
+      std::getline(stream, line, ';'); // Lecture de la précipitation
+      precipitation = std::stof(line);
+
+      std::getline(stream, line, ';'); // Lecture de la température minimale
+      tempMin = std::stof(line);
+
+      std::getline(stream, line, ';'); // Lecture de la température maximale
+      tempMax = std::stof(line);
+
+      std::getline(stream, line, ';'); // Lecture de la température moyenne
+      tempMoy = std::stof(line);
+
+      // Construction du relevé de données
+      dataEntry.station = station;
+      dataEntry.date = date;
+      dataEntry.precipitation = precipitation;
+      dataEntry.releve =
+          std::make_tuple(tempMin, tempMax, tempMoy, precipitation);
+
+      // Ajout des données à l'index
+      dataIndex[dataEntry.station][dataEntry.date] = dataEntry.releve;
+    }
+  }
+
+  file.close();
+}
