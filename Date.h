@@ -22,13 +22,13 @@ class Date{
     void setJour(int jour);
 
     //opération
-    Date operator+ (const Date& d ,int nbJour);
-    Date operator+= (Date& d ,int nbJour);
-    Date operator++ (Date& d);
+    Date operator+ (int nbJour) const;
+    Date operator+= (int nbJour);
+    Date operator++ ();
     //doit renvoyer True si d1 est avant d2
-    bool operator< (const Date& d1, const Date& d2);
+    bool operator<(const Date& other) const;
     //doit renvoyer True si d1 est égal à d2
-    bool operator== (const Date& d1, const Date& d2);
+    bool operator== (const Date& other) const;
 };
 
 // opérateur affichage 

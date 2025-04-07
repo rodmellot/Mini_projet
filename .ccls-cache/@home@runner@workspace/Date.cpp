@@ -50,73 +50,55 @@ void Date::setJour(int jour) {
 
 // opérations
 
-Date Date::operator+=(Date &d, int nbJour) {
-  int nv_jour = d.getJour() + nbJour;
+Date Date::operator+=(int nbJour) {
+  int nv_jour = d_jour + nbJour;
   if (nv_jour > 31) {
-    d.setMois(d.getMois() + 1);
-    if (d.getMois() == 1) {
-      d.setAnnee(d.getAnnee() + 1);
+    d_mois = d_mois + 1;
+    if (d_mois == 1) {
+      d_annee = d_annee + 1;
     }
-    if (d.getMois() % 2 == 0) {
-      d.setJour(31 - d.getJour());
+    if (d_mois % 2 == 0) {
+      d_jour = nv_jour - 31;
     } else {
-      d.setJour(30 - d.getJour());
+      d_jour = nv_jour - 30;
     }
   } else {
-    d.setJour(nv_jour);
+    d_jour = nv_jour;
   }
+  return *this;
 }
 
-Date Date::operator+(const Date &d, int nbJour) {
-  Date d2 = d;
-  int nv_jour = d2.getJour() + nbJour;
+Date Date::operator+(int nbJour) const {
+  Date nv_date = *this;
+  nv_date += nbJour; // on réutilise l'opérateur +=
+  return nv_date;
+}
+
+Date Date::operator++() {
+  int nv_jour = d_jour + 1;
   if (nv_jour > 31) {
-    d2.setMois(d2.getMois() + 1);
-    if (d.getMois() == 1) {
-      d2.setAnnee(d2.getAnnee() + 1);
+    d_mois = d_mois + 1;
+    if (d_mois == 1) {
+      d_annee = d_annee + 1;
     }
-    if (d2.getMois() % 2 == 0) {
-      d2.setJour(31 - d2.getJour());
-    } else {
-      d2.setJour(30 - d2.getJour());
-    }
+    d_jour = nv_jour - 31;
   } else {
-    d2.setJour(nv_jour);
+    d_jour = nv_jour;
   }
+  return *this;
 }
 
-Date Date::operator++(Date &d) {
-  int nv_jour = d.getJour() + 1;
-  if (nv_jour > 31) {
-    d.setMois(d.getMois() + 1);
-    if (d.getMois() == 1) {
-      d.setAnnee(d.getAnnee() + 1);
-    }
-    d.setJour(1);
-  } else {
-    d.setJour(nv_jour);
-  }
+bool Date::operator<(const Date &other) const {
+  if (d_annee != other.d_annee)
+    return d_annee < other.d_annee;
+  if (d_mois != other.d_mois)
+    return d_mois < other.d_mois;
+  return d_jour < other.d_jour;
 }
 
-bool Date::operator<(const Date &d1, const Date &d2) {
-  if (d1.getAnnee() < d2.getAnnee()) {
-    return true;
-  } else {
-    if (d1.getMois() < d2.getMois()) {
-      return true;
-    } else {
-      if (d1.getJour() < d2.getJour()) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-}
-
-bool Date::operator==(const Date &d1, const Date &d2) {
-  if (d1.getAnnee() == d2.getAnnee() && d1.getMois() == d2.getMois() &&
-      d1.getJour() == d2.getJour()) {
+bool Date::operator==(const Date &other) const {
+  if (d_annee == other.d_annee && d_mois == other.d_mois &&
+      d_jour == other.d_jour) {
     return true;
   } else {
     return false;
