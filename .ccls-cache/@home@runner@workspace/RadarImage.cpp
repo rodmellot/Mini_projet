@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <cmath> //pour std::round
 
 #include "RadarImage.h"
 #include "tinytiff/tinytiffreader.h"
@@ -61,4 +62,25 @@ uint16_t RadarImage::getDataAtPixel(int row, int column) const {
   }
 
   return m_data[row * m_height + column];
+}
+
+//Q13
+
+float RadarImage::getRainfallAtCoordinates(float lat, float lon) const{
+  if (lat < MIN_LATITUDE || lat > MAX_LATITUDE || lon < MIN_LONGITUDE || lon > MAX_LONGITUDE){
+    std::cerr << "Les coordonnées sont hors-limite" << std::endl;
+    return 0;
+  }
+  //on doit convertir les coordonnées en pixels
+  //première étape: calculer le ratio des coordonnées pour savoir où on se situe sur l'image
+  float lat_position = (MAX_LATITUDE - lat) / (MAX_LATITUDE - MIN_LATITUDE); 
+  float lon_position = (lon - MIN_LONGITUDE) / (MAX_LONGITUDE - MIN_LONGITUDE); 
+  //deuxième étape: calculer les pixels correspondants
+  int pixel_ligne = static_cast<int>(std::round(lat_position * m_height)); //on arrondit au pixel le plus proche, et on le convertit en int
+  int pixel_colonne = static_cast<int>(std::round(lon_position * m_width));
+  //troisième étape : on fait attention aux bornes
+  if (pixel_ligne >= m_height){pixel_ligne = m_height - 1;} 
+  if (pixel_colonne >= m_width){pixel_colonne = m_width - 1;}
+  //quatrième étape: on retourne la valeur de la pluie à ce pixel
+  return getDataAtPixel(pixel_ligne, pixel_colonne)*CONVERSION_FACTOR;
 }

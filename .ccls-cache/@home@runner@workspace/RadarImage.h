@@ -15,7 +15,7 @@ private:
 	static constexpr float MAX_LATITUDE = 49.9235863;
 	static constexpr float MIN_LONGITUDE = -6.3528495;
 	static constexpr float MAX_LONGITUDE = -0.8496449;
-	static constexpr float CONVERSION_FACTOR = 0.01;
+	static constexpr float CONVERSION_FACTOR = 0.01; //à multiplier pour la pluviométrie
 	int m_width = 0;
 	int m_height = 0;
 	bool m_valid = false;
@@ -31,6 +31,8 @@ public:
 	int getHeight() const;
 	bool isValid() const;
 	uint16_t getDataAtPixel(int row, int column) const;
+//Q13
+  float getRainfallAtCoordinates(float lat, float lon) const;
 };
 
 #endif
