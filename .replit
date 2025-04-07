@@ -13,4 +13,4 @@ mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "clang++ -std=c++17 *.cpp -o main && ./main"
+args = "clang++ -std=c++17 *.cpp tinytiff/*.cpp -I. -o main && ./main"
