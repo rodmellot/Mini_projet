@@ -23,8 +23,9 @@ public:
     float getLongitude() const;
     int getAltitude() const;
 
-    bool operator==(const Station& other) const;
-    bool operator<(const Station& other) const;
 };
+
+bool operator==(const Station& other) const;
+bool operator<(const Station& other) const;
 
 #endif /* STATION_H */
