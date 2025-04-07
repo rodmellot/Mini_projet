@@ -1,5 +1,6 @@
 #include "Date.h"
 #include "Station.h"
+#include "RadarImage.h"
 #include <fstream>
 #include <iostream>
 
@@ -25,11 +26,6 @@ int main() {
     std::cout << "d1 arrive avant d2" << std::endl;
   }
 
-  std::ifstream inputFile("stations.csv"); // Ouverture du fichier CSV
-  if (!inputFile) {
-    std::cerr << "Erreur d'ouverture du fichier." << std::endl;
-    return 1;
-  }
 
   // Test lecture des informations
   std::cout << "ID: " << station1.getId() << ", Nom: " << station1.getName()
@@ -63,6 +59,11 @@ int main() {
   // nécessitent une relation d'ordre pour fonctionner correctement. L'avnatge
   // de la comparaison avec l'opérateur == est que l'on peut vérifier si deux
   // stations sont identiques.
+
+  //test Q13
+  RadarImage image("20241003.tif");
+  image.getRainfallAtCoordinates(47.3456, -3.7856);
+  std::cout << image.getRainfallAtCoordinates(47.3456, -3.7856) <<std::endl;
 
   return 0;
 }
