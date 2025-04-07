@@ -7,12 +7,23 @@ int main() {
   // Création d'un objet en vu des tests
   Station station1("1;Station A;48.8566;2.3522;35");
   Station station2("2;Station B;45.7640;4.8357;150");
+  
   // test pour la classe Date
   Date d1(2024, 10, 1);
   d1.setJour(2);
   std::cout << d1 << std::endl;
 
   Date d2(2024, 10, 2);
+  if(d1 == d2){
+    std::cout << "Les deux dates sont égales" << std::endl;
+  }
+
+  d2 += 30;
+  std::cout << d2 << std::endl;
+
+  if(d1 < d2){
+    std::cout << "d1 arrive avant d2" << std::endl;
+  }
 
   std::ifstream inputFile("stations.csv"); // Ouverture du fichier CSV
   if (!inputFile) {
