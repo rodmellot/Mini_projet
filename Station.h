@@ -16,11 +16,11 @@ private:
 public:
     Station(const std::string& csvLine);
 
-    int getId() const { return id; }
-    std::string getName() const { return name; }
-    float getLatitude() const { return latitude; }
-    float getLongitude() const { return longitude; }
-    int getAltitude() const { return altitude; }
+    int getId() const;
+    std::string getName();
+    float getLatitude() const;
+    float getLongitude() const;
+    int getAltitude() const;
 };
 
 bool operator==(const Station& other) const;
