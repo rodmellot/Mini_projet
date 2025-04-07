@@ -1,3 +1,4 @@
+
 #ifndef STATION_H
 #define STATION_H
 
@@ -17,13 +18,13 @@ public:
     Station(const std::string& csvLine);
 
     int getId() const;
-    std::string getName();
+    std::string getName() const;
     float getLatitude() const;
     float getLongitude() const;
     int getAltitude() const;
-};
 
-bool operator==(const Station& other) const;
-bool operator<(const Station& other) const;
+    bool operator==(const Station& other) const;
+    bool operator<(const Station& other) const;
+};
 
 #endif /* STATION_H */
