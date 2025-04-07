@@ -823,7 +823,6 @@ int TinyTIFFReader_getSampleData_s___internl(TinyTIFFReaderFile* tiff, void* buf
                 }
             } else if (tiff->currentFrame.samplesperpixel>1 && tiff->currentFrame.planarconfiguration==TIFF_PLANARCONFIG_CHUNKY) {
                 uint32_t strip;
-                unsigned long fileimageidx_bytes=0;
                 unsigned long outputimageidx_bytes=0;
                 uint8_t* stripdata=NULL;
                 unsigned long last_stripsize_bytes=0;
@@ -861,7 +860,6 @@ int TinyTIFFReader_getSampleData_s___internl(TinyTIFFReaderFile* tiff, void* buf
                         outputimageidx_bytes+=tiff->currentFrame.bitspersample/8;
                     }
 
-                    fileimageidx_bytes+=stripsize_bytes;
 
                 }
                 if (stripdata) free(stripdata);
