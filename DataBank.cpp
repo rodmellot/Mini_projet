@@ -59,7 +59,18 @@ void Databank::loadData(const std::string &dataFile) {
   std::string line;
   while (std::getline(file, line)) {
     std::istringstream stream(line);
-    Data dataEntry;
+    std::string stationData;
+    std::getline(stream, stationData, ';');
+    Station station(stationData);
+
+    std::string dateStr;
+    std::getline(stream, dateStr, ';');
+    int annee = std::stoi(dateStr.substr(0, 4));
+    int mois = std::stoi(dateStr.substr(4, 2));
+    int jour = std::stoi(dateStr.substr(6, 2));
+    Date date(annee, mois, jour);
+    
+    Data dataEntry{station, date};
 
     // Lecture de la station et séparation par ;
     std::string stationData;
