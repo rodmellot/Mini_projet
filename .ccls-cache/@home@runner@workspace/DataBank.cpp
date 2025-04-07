@@ -3,11 +3,11 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-#include <unordered_map>
 
 // Constructeur
-Databank::Databank(const std::string &stationsFile,
-                   const std::string &dataFile) {
+Databank::Databank(const std::string &stationsFile, const std::string &dataFile)
+    : dataIndex() { // Initialize dataIndex here
+  dataIndex = {};
   loadStations(stationsFile);
   loadData(dataFile);
 }
@@ -20,15 +20,14 @@ Databank::StationIterator Databank::end() { return stations.end(); }
 // Méthode pour récupérer les relevés d'une station à une date donnée
 std::tuple<float, float, float, float>
 Databank::getReleve(const Station &station, const Date &date) const {
-  // Recherche rapide via l'indexation des données par station et date
   auto stationIt = dataIndex.find(station);
   if (stationIt != dataIndex.end()) {
     auto dateIt = stationIt->second.find(date);
     if (dateIt != stationIt->second.end()) {
-      return dateIt->second; // Retourne le tuple de relevés trouvé
+      return dateIt->second; // Retourner le tuple de relevés trouvé
     }
   }
-  // Retourner un tuple de NaN si aucune donnée valide n'est trouvée
+  // Retourner un tuple de NaN si aucune donnée n'est trouvée
   return std::make_tuple(NAN, NAN, NAN, NAN);
 }
 
@@ -59,52 +58,42 @@ void Databank::loadData(const std::string &dataFile) {
   std::string line;
   while (std::getline(file, line)) {
     std::istringstream stream(line);
-    Data dataEntry;
 
-    // Lecture de la station et séparation par ;
+    // Lecture de la station
     std::string stationData;
-    std::getline(stream, stationData, ';'); // Station est la première colonne
+    std::getline(stream, stationData, ';');
     Station station(stationData);
 
     // Lecture de la date (format AAAAMMJJ)
-    int annee, mois, jour;
     std::string dateStr;
-    std::getline(stream, dateStr,
-                 ';'); // Récupération de la date en format string
-    annee = std::stoi(dateStr.substr(0, 4)); // Extraction de l'année
-    mois = std::stoi(dateStr.substr(4, 2));  // Extraction du mois
-    jour = std::stoi(dateStr.substr(6, 2));  // Extraction du jour
-
+    std::getline(stream, dateStr, ';');
+    int annee = std::stoi(dateStr.substr(0, 4));
+    int mois = std::stoi(dateStr.substr(4, 2));
+    int jour = std::stoi(dateStr.substr(6, 2));
     Date date(annee, mois, jour);
 
-    // Filtrage du 1er octobre 2024 au 28 février 2025
+    // Filtrage des données entre le 1er octobre 2024 et le 28 février 2025
     if ((annee > 2024 || (annee == 2024 && mois >= 10)) &&
         (annee < 2025 || (annee == 2025 && mois <= 2))) {
 
-      // Lecture des autres données : précipitation, température min, temp max,
-      // temp moy
+      // Lecture des autres données
       float precipitation, tempMin, tempMax, tempMoy;
-      std::getline(stream, line, ';'); // Lecture de la précipitation
+      std::getline(stream, line, ';');
       precipitation = std::stof(line);
 
-      std::getline(stream, line, ';'); // Lecture de la température minimale
+      std::getline(stream, line, ';');
       tempMin = std::stof(line);
 
-      std::getline(stream, line, ';'); // Lecture de la température maximale
+      std::getline(stream, line, ';');
       tempMax = std::stof(line);
 
-      std::getline(stream, line, ';'); // Lecture de la température moyenne
+      std::getline(stream, line, ';');
       tempMoy = std::stof(line);
 
-      // Construction du relevé de données
-      dataEntry.station = station;
-      dataEntry.date = date;
-      dataEntry.precipitation = precipitation;
-      dataEntry.releve =
-          std::make_tuple(tempMin, tempMax, tempMoy, precipitation);
-
-      // Ajout des données à l'index
-      dataIndex[dataEntry.station][dataEntry.date] = dataEntry.releve;
+      // Création de l'entrée Data et ajout dans l'index
+      Data dataEntry{station, date, precipitation,
+                     std::make_tuple(tempMin, tempMax, tempMoy, precipitation)};
+      dataIndex[station][date] = std::move(dataEntry.releve);
     }
   }
 
