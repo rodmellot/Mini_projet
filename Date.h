@@ -22,7 +22,9 @@ class Date{
     void setJour(int jour);
 
     //opération
-    Date operator+ (int nbJour) const;
+    Date operator+ (const Date& d ,int nbJour);
+    Date operator+= (Date& d ,int nbJour);
+    Date operator++ (Date& d);
 
 };
 

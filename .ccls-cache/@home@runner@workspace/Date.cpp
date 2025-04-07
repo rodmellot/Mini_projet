@@ -48,11 +48,54 @@ void Date::setJour(int jour) {
   }
 }
 
-//opérations
+// opérations
 
-Date Date::operator+(int nbjour) const{
-    
+Date Date::operator+=(Date &d, int nbJour) {
+  int nv_jour = d.getJour() + nbJour;
+  if (nv_jour > 31) {
+    d.setMois(d.getMois() + 1);
+    if (d.getMois() == 1) {
+      d.setAnnee(d.getAnnee() + 1);
+    }
+    if (d.getMois() % 2 == 0) {
+      d.setJour(31 - d.getJour());
+    } else {
+      d.setJour(30 - d.getJour());
+    }
+  } else {
+    d.setJour(nv_jour);
+  }
+}
 
+Date Date::operator+(const Date &d, int nbJour) {
+  Date d2 = d;
+  int nv_jour = d2.getJour() + nbJour;
+  if (nv_jour > 31) {
+    d2.setMois(d2.getMois() + 1);
+    if (d.getMois() == 1) {
+      d2.setAnnee(d2.getAnnee() + 1);
+    }
+    if (d2.getMois() % 2 == 0) {
+      d2.setJour(31 - d2.getJour());
+    } else {
+      d2.setJour(30 - d2.getJour());
+    }
+  } else {
+    d2.setJour(nv_jour);
+  }
+}
+
+Date Date::operator++(Date &d) {
+  int nv_jour = d.getJour() + 1;
+  if (nv_jour > 31) {
+    d.setMois(d.getMois() + 1);
+    if (d.getMois() == 1) {
+      d.setAnnee(d.getAnnee() + 1);
+    }
+    d.setJour(1);
+  } else {
+    d.setJour(nv_jour);
+  }
 }
 
 // opérateur d'affichage
