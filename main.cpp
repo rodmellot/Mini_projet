@@ -1,10 +1,12 @@
 #include "DataBank.h"
 #include "Date.h"
+#include "RadarImage.h"
 #include "Station.h"
 #include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <unistd.h>
 
 void testDate() {
   std::cout << "=== Test de la classe Date ===\n";
@@ -86,10 +88,43 @@ void testDatabank() {
   std::cout << "\n";
 }
 
+void testRadarImage() {
+  std::cout << "=== Test de la classe RadarImage ===\n";
+
+  // Affichage du répertoire courant (working directory)
+  char cwd[1024];
+  if (getcwd(cwd, sizeof(cwd)) != nullptr) {
+    std::cout << "Répertoire courant : " << cwd << "\n";
+  } else {
+    perror("getcwd() erreur");
+    return;
+  }
+
+  // Spécifier le chemin vers l'image radar
+  std::string cheminFichier = "../Mini_projet/Donnees/radar/2024-11-20.tif";
+  std::cout << "Tentative d’ouverture du fichier : " << cheminFichier << "\n";
+
+  RadarImage radar(cheminFichier);
+
+  if (!radar.isValid()) {
+    std::cerr << "[ERREUR] L’image radar n’a pas pu être chargée.\n";
+    return;
+  }
+
+  // Coordonnées de test
+  float lat = 48.855167;
+  float lon = -3.004500;
+  float pluie = radar.getRainfallAtCoordinates(lat, lon);
+
+  std::cout << "Pluviométrie au point (" << lat << ", " << lon
+            << ") : " << pluie << " mm\n";
+}
+
 int main() {
   testDate();
   testStation();
   testDatabank();
+  testRadarImage();
 
   return 0;
 }
