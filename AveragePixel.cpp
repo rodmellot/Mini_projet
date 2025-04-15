@@ -1,5 +1,4 @@
 #include "AveragePixel.h"
-#include "Databank.h"
 #include <iostream>
 
 AveragePixel::AveragePixel(Databank &db) : databank(db) {}
