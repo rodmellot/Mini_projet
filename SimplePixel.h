@@ -2,7 +2,7 @@
 #define SIMPLEPIXEL_H
 
 #include "ComparaisonAlgorithm.h"
-#include "Databank.h"  
+#include "DataBank.h"  
 
 class SimplePixel : public ComparisonAlgorithm {
 public:
