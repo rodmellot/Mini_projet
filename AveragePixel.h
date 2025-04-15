@@ -3,7 +3,7 @@
 #define AVERAGEPIXEL_H
 
 #include "ComparaisonAlgorithm.h"
-#include "Databank.h"  
+#include "DataBank.h"  
 
 class AveragePixel : public ComparaisonAlgorithm {
 public:
