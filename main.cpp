@@ -2,6 +2,9 @@
 #include "Date.h"
 #include "RadarImage.h"
 #include "Station.h"
+#include "ComparaisonAlgorithm.h"
+#include "AveragePixel.h"
+#include "SimplePixel.h"
 #include <cmath>
 #include <fstream>
 #include <iomanip>
@@ -114,11 +117,30 @@ void testRadarImage() {
             << ") : " << pluie << " mm\n";
 }
 
+//Partie 2 - Question 5
+void testComparaisonAlgorithm(const Date &date, const int n){
+  if(n!=1 && n!=2){
+    std::cerr << "Le numéro d'algorithme doit être 1 ou 2" << std::endl;
+    return;
+  }
+  if(n==1){
+    SimplePixel simplepixel();
+    std::cout<<simplepixel.getDataForDay(date)<<std::endl;
+  }
+
+  if(n==2){
+    AveragePixel averagepixel;
+    std::cout<<averagepixel.getDataForDay(date)<<std::endl;
+  }
+  
+}
+
 int main() {
   testDate();
   testStation();
   testDatabank();
   testRadarImage();
+  testComparaisonAlgorithm(, 1)
 
   return 0;
 }
