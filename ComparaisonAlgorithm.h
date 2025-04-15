@@ -4,9 +4,9 @@
 #include <string>
 #include "Date.h"
 
-class ComparisonAlgorithm {
+class ComparaisonAlgorithm {
 public:
-    virtual ~ComparisonAlgorithm() = default;
+    virtual ~ComparaisonAlgorithm() = default;
 
     // Méthode à implementer a posteriori dans les classes filles
     virtual void getDataForDay(const Date& date) = 0;

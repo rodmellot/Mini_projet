@@ -32,4 +32,12 @@ int Station::getAltitude() const { return altitude; }
 
 bool Station::operator==(const Station &other) const { return id == other.id; }
 
-bool Station::operator<(const Station &other) const { return id < other.id; }
+bool Station::operator<(const Station &other) const {
+  return id < other.id;
+
+  // Question 6 : L'avantage de la comparaison avec l'opérateur < est que l'on
+  // peut utiliser des structures de données comme les sets ou les maps qui
+  // nécessitent une relation d'ordre pour fonctionner correctement. L'avnatge
+  // de la comparaison avec l'opérateur == est que l'on peut vérifier si deux
+  // stations sont identiques.
+}

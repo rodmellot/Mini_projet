@@ -17,7 +17,6 @@ Databank::StationIterator Databank::end() { return stations.end(); }
 
 std::tuple<float, float, float, float>
 Databank::getReleve(const Station &station, const Date &date) const {
-  // Utilisation de map à la place de unordered_map
   auto stationIt = dataIndex.find(station);
   if (stationIt != dataIndex.end()) {
     auto dateIt = stationIt->second.find(date);
@@ -25,7 +24,6 @@ Databank::getReleve(const Station &station, const Date &date) const {
       return dateIt->second;
     }
   }
-  // Retourner un tuple de NaN si aucune donnée n'est trouvée
   return std::make_tuple(NAN, NAN, NAN, NAN);
 }
 
@@ -36,8 +34,11 @@ void Databank::loadStations(const std::string &stationsFile) {
   }
 
   std::string line;
+  std::getline(file, line);
+
   while (std::getline(file, line)) {
-    std::istringstream stream(line);
+    if (line.empty())
+      continue;
     Station station(line);
     stations.push_back(station);
   }
@@ -52,40 +53,52 @@ void Databank::loadData(const std::string &dataFile) {
   }
 
   std::string line;
+  std::getline(file, line); // Ignorer l'en-tête
+
   while (std::getline(file, line)) {
-    std::istringstream stream(line);
+    std::stringstream stream(line);
+    std::string field;
 
-    std::string stationData;
-    std::getline(stream, stationData, ';');
-    Station station(stationData);
+    // Lecture ID de station
+    std::getline(stream, field, ';');
+    std::string id = field;
 
-    std::string dateStr;
-    std::getline(stream, dateStr, ';');
-    int annee = std::stoi(dateStr.substr(0, 4));
-    int mois = std::stoi(dateStr.substr(4, 2));
-    int jour = std::stoi(dateStr.substr(6, 2));
+    // Ignorer NOM_USUEL, LAT, LON, ALTI
+    for (int i = 0; i < 4; ++i) {
+      std::getline(stream, field, ';');
+    }
+
+    // Construction minimale de la Station à partir du seul ID
+    Station station(id + ";Placeholder;0;0;0");
+
+    // Lecture date
+    std::getline(stream, field, ';');
+    int annee = std::stoi(field.substr(0, 4));
+    int mois = std::stoi(field.substr(4, 2));
+    int jour = std::stoi(field.substr(6, 2));
     Date date(annee, mois, jour);
 
-    // Filtrage des données entre le 1er octobre 2024 et le 28 février 2025
+    // Vérification période
     if ((annee > 2024 || (annee == 2024 && mois >= 10)) &&
         (annee < 2025 || (annee == 2025 && mois <= 2))) {
 
-      float tempMin, tempMax, tempMoy;
-      std::getline(stream, line, ';'); // Ignorer la pluie (précipitation)
-      std::getline(stream, line, ';');
-      tempMin = std::stof(line);
+      // Lecture RR, TN, TX, TM
+      float pluie, tempMin, tempMax, tempMoy;
 
-      std::getline(stream, line, ';');
-      tempMax = std::stof(line);
+      std::getline(stream, field, ';');
+      pluie = field.empty() ? NAN : std::stof(field);
 
-      std::getline(stream, line, ';');
-      tempMoy = std::stof(line);
+      std::getline(stream, field, ';');
+      tempMin = field.empty() ? NAN : std::stof(field);
 
-      // Création de l'entrée Data et ajout dans l'index
-      Data dataEntry{station, date,
-                     std::make_tuple(tempMin, tempMax, tempMoy,
-                                     NAN)}; // Remplacer la pluie par NaN
-      dataIndex[station][date] = std::move(dataEntry.releve);
+      std::getline(stream, field, ';');
+      tempMax = field.empty() ? NAN : std::stof(field);
+
+      std::getline(stream, field, ';');
+      tempMoy = field.empty() ? NAN : std::stof(field);
+
+      dataIndex[station][date] =
+          std::make_tuple(tempMin, tempMax, tempMoy, pluie);
     }
   }
 

@@ -1,76 +1,96 @@
+#include "DataBank.h"
 #include "Date.h"
-#include "RadarImage.h"
 #include "Station.h"
-#include "tinytiff/tinytiffreader.h"
+#include <cmath>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 
-int main() {
-  // Création d'un objet en vu des tests
+void testDate() {
+  std::cout << "=== Test de la classe Date ===\n";
+  Date d1(2024, 10, 1);
+  d1.setJour(2);
+  std::cout << "d1 : " << d1 << std::endl;
+
+  Date d2(2024, 10, 2);
+  if (d1 == d2)
+    std::cout << "Les deux dates sont égales" << std::endl;
+
+  d2 += 30;
+  std::cout << "d2 après +=30 : " << d2 << std::endl;
+
+  if (d1 < d2)
+    std::cout << "d1 arrive avant d2" << std::endl;
+
+  std::cout << std::endl;
+}
+
+void testStation() {
+  std::cout << "=== Test de la classe Station ===\n";
   Station station1("1;Station A;48.8566;2.3522;35");
   Station station2("2;Station B;45.7640;4.8357;150");
 
-  // test pour la classe Date
-  Date d1(2024, 10, 1);
-  d1.setJour(2);
-  std::cout << d1 << std::endl;
+  auto printStation = [](const Station &s) {
+    std::cout << "ID: " << s.getId() << ", Nom: " << s.getName()
+              << ", Latitude: " << s.getLatitude()
+              << ", Longitude: " << s.getLongitude()
+              << ", Altitude: " << s.getAltitude() << std::endl;
+  };
 
-  Date d2(2024, 10, 2);
-  if (d1 == d2) {
-    std::cout << "Les deux dates sont égales" << std::endl;
-  }
+  printStation(station1);
+  printStation(station2);
 
-  d2 += 30;
-  std::cout << d2 << std::endl;
+  std::cout << (station1 == station2 ? "Stations égales"
+                                     : "Stations différentes")
+            << std::endl;
+  std::cout << (station1 < station2 ? "Station1 < Station2"
+                                    : "Station1 >= Station2")
+            << std::endl;
 
-  if (d1 < d2) {
-    std::cout << "d1 arrive avant d2" << std::endl;
-  }
+  std::cout << "\n";
+}
 
-  // Test lecture des informations
-  std::cout << "ID: " << station1.getId() << ", Nom: " << station1.getName()
-            << ", Latitude: " << station1.getLatitude()
-            << ", Longitude: " << station1.getLongitude()
-            << ", Altitude: " << station1.getAltitude() << std::endl;
+void testDatabank() {
+  std::cout << "=== Test de la classe Databank ===\n";
+  try {
+    Databank db("Donnees/stations.csv", "Donnees/donnees.csv");
 
-  std::cout << "ID: " << station2.getId() << ", Nom: " << station2.getName()
-            << ", Latitude: " << station2.getLatitude()
-            << ", Longitude: " << station2.getLongitude()
-            << ", Altitude: " << station2.getAltitude() << std::endl;
+    std::cout << "Stations chargées :" << std::endl;
+    for (const auto &station : db) {
+      std::cout << " - " << station.getName() << std::endl;
+    }
 
-  // Comparaison des stations avec l'opérateur ==
-  if (station1 == station2) {
-    std::cout << "Les deux stations sont égales." << std::endl;
-  } else {
-    std::cout << "Les deux stations sont différentes." << std::endl;
-  }
+    // Exemple de test avec une station fictive correspondant à votre CSV
+    Station testStation("12345678;Testville;50.0;3.0;100");
+    Date testDate(2024, 11, 5);
 
-  // Comparaison des stations avec l'opérateur <
-  if (station1 < station2) {
-    std::cout << "L'identifiant de la station 1 est inférieur ou égal à celui "
-                 "de la station 2."
+    auto releve = db.getReleve(testStation, testDate);
+    float tempMin, tempMax, tempMoy, pluie;
+    std::tie(tempMin, tempMax, tempMoy, pluie) = releve;
+
+    std::cout << "\nDonnées pour la station '" << testStation.getName()
+              << "' le " << testDate << " :" << std::endl;
+
+    std::cout << std::fixed << std::setprecision(2);
+    std::cout << " - Temp min : " << tempMin << std::endl;
+    std::cout << " - Temp max : " << tempMax << std::endl;
+    std::cout << " - Temp moy : " << tempMoy << std::endl;
+    std::cout << " - Pluie    : "
+              << (std::isnan(pluie) ? "données indisponibles"
+                                    : std::to_string(pluie))
               << std::endl;
-  } else {
-    std::cout << "Les deux stations sont différentes." << std::endl;
+
+  } catch (const std::exception &e) {
+    std::cerr << "Erreur : " << e.what() << std::endl;
   }
 
-  // Question 6 : L'avantage de la comparaison avec l'opérateur < est que l'on
-  // peut utiliser des structures de données comme les sets ou les maps qui
-  // nécessitent une relation d'ordre pour fonctionner correctement. L'avnatge
-  // de la comparaison avec l'opérateur == est que l'on peut vérifier si deux
-  // stations sont identiques.
+  std::cout << "\n";
+}
 
-  // test Q13
-
-  RadarImage image(
-      "/Donnees/radar/2024-11-01.tif"); // même en mettant le chemin complet, le
-                                        // code n'arrive pas à ouvrir le fichier
-                                        // tif
-  if (!image.isValid()) {
-    std::cerr << "Impossible de charger l'image" << std::endl;
-  }
-  image.getRainfallAtCoordinates(47.3456, -3.7856);
-  std::cout << image.getRainfallAtCoordinates(47.3456, -3.7856) << std::endl;
+int main() {
+  testDate();
+  testStation();
+  testDatabank();
 
   return 0;
 }

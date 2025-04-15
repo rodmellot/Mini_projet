@@ -4,7 +4,7 @@
 #include "ComparaisonAlgorithm.h"
 #include "DataBank.h"  
 
-class SimplePixel : public ComparisonAlgorithm {
+class SimplePixel : public ComparaisonAlgorithm {
 public:
     SimplePixel(Databank& db);  // Constructeur
     void getDataForDay(const Date& date) override;  

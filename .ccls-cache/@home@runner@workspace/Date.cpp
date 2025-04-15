@@ -53,14 +53,14 @@ void Date::setJour(int jour) {
 Date Date::operator+=(int nbJour) {
   int nv_jour = d_jour + nbJour;
   if (nv_jour > 31) {
-    d_mois = d_mois + 1;
-    if (d_mois == 1) {
-      d_annee = d_annee + 1;
-    }
-    if (d_mois % 2 == 0) {
+    if (d_mois  % 2 == 0) { 
       d_jour = nv_jour - 31;
     } else {
       d_jour = nv_jour - 30;
+    }
+    d_mois = d_mois + 1;
+    if (d_mois == 1){
+        d_annee = d_annee + 1;
     }
   } else {
     d_jour = nv_jour;
