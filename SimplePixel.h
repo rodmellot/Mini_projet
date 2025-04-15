@@ -1,7 +1,7 @@
 #ifndef SIMPLEPIXEL_H
 #define SIMPLEPIXEL_H
 
-#include "ComparisonAlgorithm.h"
+#include "ComparaisonAlgorithm.h"
 #include "Databank.h"  
 
 class SimplePixel : public ComparisonAlgorithm {
