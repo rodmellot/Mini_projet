@@ -60,9 +60,8 @@ void testDatabank() {
       std::cout << " - " << station.getName() << std::endl;
     }
 
-    // Exemple de test avec une station fictive correspondant à votre CSV
-    Station testStation("12345678;Testville;50.0;3.0;100");
-    Date testDate(2024, 11, 5);
+    Station testStation("22016001;ILE-DE-BREHAT;48.855167;-3.004500;25");
+    Date testDate(2024, 11, 20);
 
     auto releve = db.getReleve(testStation, testDate);
     float tempMin, tempMax, tempMoy, pluie;
