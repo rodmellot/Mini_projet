@@ -1,10 +1,11 @@
+
 #ifndef AVERAGEPIXEL_H
 #define AVERAGEPIXEL_H
 
-#include "ComparisonAlgorithm.h"
+#include "ComparaisonAlgorithm.h"
 #include "Databank.h"  
 
-class AveragePixel : public ComparisonAlgorithm {
+class AveragePixel : public ComparaisonAlgorithm {
 public:
     AveragePixel(Databank& db);  
     void getDataForDay(const Date& date) override;  
