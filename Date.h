@@ -1,3 +1,7 @@
+
+#ifndef DATE_H
+#define DATE_H
+
 #include <iostream>
 #include <string>
 
@@ -33,3 +37,5 @@ class Date{
 
 // opérateur affichage 
 std::ostream& operator<<(std::ostream& os, const Date& d);
+
+#endif /* DATE_H */
