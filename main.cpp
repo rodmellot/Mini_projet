@@ -7,6 +7,8 @@
 #include <iomanip>
 #include <iostream>
 #include <unistd.h>
+#include <filesystem> 
+namespace fs = std::filesystem;
 
 void testDate() {
   std::cout << "=== Test de la classe Date ===\n";
@@ -88,20 +90,12 @@ void testDatabank() {
   std::cout << "\n";
 }
 
+
 void testRadarImage() {
   std::cout << "=== Test de la classe RadarImage ===\n";
 
-  // Affichage du répertoire courant (working directory)
-  char cwd[1024];
-  if (getcwd(cwd, sizeof(cwd)) != nullptr) {
-    std::cout << "Répertoire courant : " << cwd << "\n";
-  } else {
-    perror("getcwd() erreur");
-    return;
-  }
-
   // Spécifier le chemin vers l'image radar
-  std::string cheminFichier = "../Mini_projet/Donnees/radar/2024-11-20.tif";
+  std::string cheminFichier = "Donnees/radar/2024-11-20.tif";
   std::cout << "Tentative d’ouverture du fichier : " << cheminFichier << "\n";
 
   RadarImage radar(cheminFichier);
