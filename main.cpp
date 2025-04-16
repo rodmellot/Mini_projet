@@ -126,13 +126,13 @@ void testComparaisonAlgorithm(const Date &date, const int n) {
     Databank db("Donnees/stations.csv", "Donnees/donnees.csv");
 
     if (n == 1) {
-      std::cout << "=== Comparaison avec SimplePixel ===\n";
+      std::cout << "=== Utilisation de SimplePixel ===\n";
       SimplePixel simplepixel(db);
       simplepixel.getDataForDay(date);
     }
 
     if (n == 2) {
-      std::cout << "=== Comparaison avec AveragePixel ===\n";
+      std::cout << "=== Utilisation d'AveragePixel ===\n";
       AveragePixel averagepixel(db);
       averagepixel.getDataForDay(date);
     }
