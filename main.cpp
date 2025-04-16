@@ -1,16 +1,16 @@
+#include "AveragePixel.h"
+#include "ComparaisonAlgorithm.h"
 #include "DataBank.h"
 #include "Date.h"
 #include "RadarImage.h"
-#include "Station.h"
-#include "ComparaisonAlgorithm.h"
-#include "AveragePixel.h"
 #include "SimplePixel.h"
+#include "Station.h"
 #include <cmath>
+#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <unistd.h>
-#include <filesystem> 
 namespace fs = std::filesystem;
 
 void testDate() {
@@ -93,7 +93,6 @@ void testDatabank() {
   std::cout << "\n";
 }
 
-
 void testRadarImage() {
   std::cout << "=== Test de la classe RadarImage ===\n";
 
@@ -117,22 +116,29 @@ void testRadarImage() {
             << ") : " << pluie << " mm\n";
 }
 
-//Partie 2 - Question 5
-void testComparaisonAlgorithm(const Date &date, const int n){
-  if(n!=1 && n!=2){
+// Partie 2 - Question 5
+void testComparaisonAlgorithm(const Date &date, const int n) {
+  if (n != 1 && n != 2) {
     std::cerr << "Le numéro d'algorithme doit être 1 ou 2" << std::endl;
     return;
   }
-  if(n==1){
-    SimplePixel simplepixel();
-    std::cout<<simplepixel.getDataForDay(date)<<std::endl;
-  }
+  try {
+    Databank db("Donnees/stations.csv", "Donnees/donnees.csv");
 
-  if(n==2){
-    AveragePixel averagepixel;
-    std::cout<<averagepixel.getDataForDay(date)<<std::endl;
+    if (n == 1) {
+      std::cout << "=== Comparaison avec SimplePixel ===\n";
+      SimplePixel simplepixel(db);
+      simplepixel.getDataForDay(date);
+    }
+
+    if (n == 2) {
+      std::cout << "=== Comparaison avec AveragePixel ===\n";
+      AveragePixel averagepixel(db);
+      averagepixel.getDataForDay(date);
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
   }
-  
 }
 
 int main() {
@@ -140,7 +146,8 @@ int main() {
   testStation();
   testDatabank();
   testRadarImage();
-  testComparaisonAlgorithm(, 1)
+  testComparaisonAlgorithm(Date(2024, 11, 20), 1);
+  testComparaisonAlgorithm(Date(2024, 11, 20), 2);
 
   return 0;
 }
